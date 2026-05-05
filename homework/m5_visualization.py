@@ -149,6 +149,11 @@ def yellow_scatter_price_amount():
     提示：plt.scatter() 或 sns.scatterplot()
     """
     # TODO: 你的程式碼
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+
+
     plt.figure(figsize=(10, 6))
     sns.scatterplot(data=df, x='unit_price', y='amount',
                     hue='category', alpha=0.6, s=60)
