@@ -29,7 +29,19 @@ def green_bar_category():
     提示：sns.countplot 或 value_counts().plot.bar()
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+
+    category = df.groupby('category')['order_id'].count().reset_index()
+    plt.figure(figsize=(10, 4))
+    sns.barplot(data=category, x='category', y='order_id', palette='viridis', hue='category', legend=False)
+    plt.title('category_count', fontweight='bold')
+    plt.xlabel('category')
+    plt.ylabel('order_count')
+    plt.tight_layout()
+    plt.show()
+
 
 
 def green_hist_amount():
@@ -39,7 +51,14 @@ def green_hist_amount():
     提示：sns.histplot(bins=20) 或 plt.hist()
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+    sns.histplot(data=df, x='amount', bins=20, kde=True)
+    plt.title('amount Distribution')
+    plt.show()
+
+    
 
 
 def green_set_labels():
@@ -51,7 +70,19 @@ def green_set_labels():
     回傳 matplotlib Figure 物件
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+
+    category = df.groupby('category')['order_id'].count().reset_index()
+    plt.figure(figsize=(10, 4))
+    sns.barplot(data=category, x='category', y='order_id', palette='viridis', hue='category', legend=False)
+    plt.title('category_count', fontweight='bold')
+    plt.xlabel('category')
+    plt.ylabel('order_count')
+    plt.tight_layout()
+    plt.show()
+    
 
 
 # ============================================================
@@ -68,7 +99,25 @@ def yellow_line_region_trend():
     提示：分別 groupby 再 plot，或用 sns.lineplot(hue='region')
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+    df['month'] = df['order_date'].dt.to_period('M').astype(str)
+
+    monthly_date = df.groupby(['month', 'region'])['amount'].sum()
+
+    target_region = monthly_date[monthly_date['region'].isin(['North', 'South'])]
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    sns.lineplot(data= target_region, x='month', y='amount', 
+                 hue='region', marker='o', ax=ax)
+    
+    ax.set_title('Monthly Revenue: North vs South', fontweight='bold')
+    ax.set_xlabel('Month')
+    ax.set_ylabel('Total Revenue')
+    plt.xticks(rotation=45)
+
 
 
 def yellow_box_vip():
@@ -78,7 +127,19 @@ def yellow_box_vip():
     提示：sns.boxplot(x='vip_level', y='amount', data=df)
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(
+    '../datasets/ecommerce/orders_enriched.csv',
+    parse_dates=['order_date'],)
+
+    plt.figure(figsize=(9, 5))
+    sns.boxplot(data=df, x='vip_level', y='amount', palette='Set2', hue='vip_level', legend=False)
+    plt.title('Order Amount Distribution by vip_level', fontweight='bold')
+    plt.xlabel('vip_level')
+    plt.ylabel('Amount')
+    plt.xticks(rotation=15)
+    plt.tight_layout()
+    plt.show()
+    
 
 
 def yellow_scatter_price_amount():
@@ -88,7 +149,16 @@ def yellow_scatter_price_amount():
     提示：plt.scatter() 或 sns.scatterplot()
     """
     # TODO: 你的程式碼
-    pass
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='unit_price', y='amount',
+                    hue='category', alpha=0.6, s=60)
+    plt.title('Unit Price vs Order Amount (by Category)', fontweight='bold')
+    plt.xlabel('Unit Price')
+    plt.ylabel('Order Amount')
+    plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left')
+    plt.tight_layout()
+    plt.show()
+    
 
 
 # ============================================================

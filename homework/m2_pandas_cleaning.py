@@ -20,7 +20,9 @@ def green_read_csv():
     提示：pd.read_csv()
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv('../datasets/ecommerce/orders_raw.csv')
+    return df
+
 
 
 def green_shape(df):
@@ -29,7 +31,7 @@ def green_shape(df):
     提示：df.shape
     """
     # TODO: 你的程式碼
-    pass
+    return df.shape
 
 
 def green_dtypes(df):
@@ -38,7 +40,8 @@ def green_dtypes(df):
     提示：df.dtypes
     """
     # TODO: 你的程式碼
-    pass
+    return df.dtypes
+
 
 
 # ============================================================
@@ -52,7 +55,9 @@ def yellow_clean_columns(df):
     提示：df.columns.str.strip().str.lower()
     """
     # TODO: 你的程式碼
-    pass
+    df_new = df.copy()
+    df_new.columns = df_new.columns.str.strip().str.lower()
+    return df_new
 
 
 def yellow_clean_amount(df):
@@ -63,7 +68,16 @@ def yellow_clean_amount(df):
     提示：.str.replace() + .astype(float)
     """
     # TODO: 你的程式碼
-    pass
+    df_new = df.copy()
+    df_new['amount'] = (
+        df_new['amount']
+        .astype(str)
+        .str.replace('$', '')
+        .str.replace(',', '')
+        .astype(float)
+    )
+
+    return df_new
 
 
 def yellow_drop_duplicates(df):
@@ -72,7 +86,9 @@ def yellow_drop_duplicates(df):
     提示：df.drop_duplicates()
     """
     # TODO: 你的程式碼
-    pass
+    df_new = df.copy()
+    df_new = df_new.drop_duplicates()
+    return df_new
 
 
 # ============================================================
@@ -93,4 +109,34 @@ def red_clean_orders(path):
     提示：pd.to_datetime(errors='coerce')
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv(path)
+
+    df.columns = df.columns.str.strip().str.lower()
+
+    df['amount'] = (
+        df['amount']
+        .astype(str)
+        .str.replace('$', '')
+        .str.replace(',', '')
+        .astype(float)
+    )
+
+    df['order_date'] = pd.to_datetime(df['order_date'], errors='coerce')
+
+    df = df.dropna(subset=['amount'])
+
+    df = df.dropna(subset=['order_date'])
+
+    df = df.drop_duplicates()
+
+    return df
+
+
+
+
+
+
+
+    
+
+

@@ -27,7 +27,11 @@ def green_avg_by_month():
     提示：df['order_date'].dt.month
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    df['month'] = df['order_date'].dt.month
+    df_mon = df.groupby('month')['amount'].mean()
+    return df_mon
 
 
 def green_top3_dates():
@@ -37,7 +41,11 @@ def green_top3_dates():
     提示：value_counts().head(3)
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    ts = df.set_index('order_date').sort_index()
+    top3 = ts['order_id'].resample('D').count().head(3)
+    return top3
 
 
 def green_date_range():
@@ -46,7 +54,10 @@ def green_date_range():
     格式為 pandas Timestamp
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    
+    return f'({list(df['order_date'].sort_values())[0]}, {list(df['order_date'].sort_values())[-1]})'
 
 
 # ============================================================
@@ -60,7 +71,14 @@ def yellow_monthly_revenue():
     提示：set_index('order_date').resample('ME')['amount'].sum()
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    ts = df.set_index('order_date').sort_index()
+
+    mon_rev = ts.resample('ME')['amount'].sum()
+
+    return mon_rev
+    
 
 
 def yellow_rolling_avg(monthly_revenue):
@@ -71,7 +89,17 @@ def yellow_rolling_avg(monthly_revenue):
     提示：.rolling(window=3).mean()
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    ts = df.set_index('order_date').sort_index()
+
+    mon_rev = ts.resample('ME')['amount'].sum()
+
+    mon_roll = mon_rev.rolling(window = monthly_revenue).mean()
+
+    return mon_roll
+
+
 
 
 def yellow_category_median(df):
@@ -81,7 +109,8 @@ def yellow_category_median(df):
     提示：groupby + median + sort_values
     """
     # TODO: 你的程式碼
-    pass
+    cate_med = df.groupby('category')['amount'].median().sort_values(ascending = False)
+    return cate_med
 
 
 # ============================================================
@@ -101,4 +130,27 @@ def red_monthly_report():
     提示：resample + agg + pct_change
     """
     # TODO: 你的程式碼
-    pass
+    df = pd.read_csv("../datasets/ecommerce/orders_enriched.csv",
+                     parse_dates=["order_date"])
+    ts = df.set_index('order_date').sort_index()
+
+    mon_count = ts['order_id'].resample('ME').count()
+
+    mon_rev = ts['amount'].resample('ME').sum()
+
+    mon_act = ts['customer_id'].resample('ME').nunique()
+
+    mon_avg = mon_rev / mon_count
+
+    mon_rev_grow = mon_rev.pct_change()
+
+    mon_info = pd.DataFrame({
+        'order_count': mon_count,
+        'revenue': mon_rev,
+        'active_customers': mon_act,
+        'avg_order_value': mon_avg,
+        'revenue_growth': mon_rev_grow,
+    })
+
+    return mon_info
+    
