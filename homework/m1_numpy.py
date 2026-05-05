@@ -81,9 +81,6 @@ def red_double11_prices(prices, stocks):
     提示：np.where 可以巢狀使用
     """
     # TODO: 你的程式碼
-    dis_7 = prices[stocks >= 100] * 0.7
-    dis_9 = prices[(stocks >= 20) & (stocks <= 99)] * 0.9
-    dis_0 = prices[stocks < 20]
-    final_price = np.concatenate((dis_7, dis_0, dis_9))
+    final_price = np.where(stocks >= 100, prices * 0.7, 
+                           np.where(stocks >= 20, prices * 0.9, prices))
     return final_price
-
